@@ -1,0 +1,21 @@
+services:
+  oci-instance-creator:
+    image: ghcr.io/pschmucker/oci-instance-creator:latest
+    container_name: oci-instance-creator
+    restart: unless-stopped
+    volumes:
+      # Mount folder containing Terraform configuration files
+      - ./terraform:/app/terraform
+      # Mount keys folder for OCI authentication (read-only)
+      - ./keys:/root/.ssh:ro
+    environment:
+      TF_VAR_tenancy_ocid: "${TENANCY_OCID}"
+      TF_VAR_user_ocid: "${USER_OCID}"
+      TF_VAR_fingerprint: "${FINGERPRINT}"
+      TF_VAR_private_key_path: "${PRIVATE_KEY_PATH}"
+      TF_VAR_region: "${REGION}"
+
+
+networks:
+  default:
+    name: oci
